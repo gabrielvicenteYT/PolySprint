@@ -17,17 +17,16 @@
  */
 package mynameisjeff.simpletogglesprint.commands
 
-import gg.essential.api.EssentialAPI
-import gg.essential.api.commands.Command
-import gg.essential.api.commands.DefaultHandler
-import mynameisjeff.simpletogglesprint.core.Config
+import cc.polyfrost.oneconfig.utils.commands.annotations.Command
+import cc.polyfrost.oneconfig.utils.commands.annotations.Main
+import mynameisjeff.simpletogglesprint.core.SimpleToggleSprintConfig
 
-object SimpleToggleSprintCommand : Command("simpletogglesprint") {
+@Command("simpletogglesprint", aliases = ["sts", "togglesprint", "togglesneak"])
+object SimpleToggleSprintCommand {
 
-    override val commandAliases = setOf(Alias("togglesprint"))
-
-    @DefaultHandler
+    @Main
+    @JvmStatic
     fun execCommand() {
-        EssentialAPI.getGuiUtil().openScreen(Config.gui())
+        SimpleToggleSprintConfig.openGui()
     }
 }

@@ -18,6 +18,7 @@
 
 package mynameisjeff.simpletogglesprint.tweaker
 
+import cc.polyfrost.oneconfig.utils.notifications.Notifications
 import mynameisjeff.simpletogglesprint.core.is1_12_2
 import net.minecraftforge.fml.relauncher.CoreModManager
 import org.spongepowered.asm.lib.tree.ClassNode
@@ -30,6 +31,7 @@ class MixinPlugin : IMixinConfigPlugin {
         for ((key, value) in CoreModManager.getTransformers()) {
             if (key.startsWith("PlayerAPIPlugin") && value.contains("api.player.forge.PlayerAPITransformer")) {
                 println("PlayerAPI detected.")
+                Notifications.INSTANCE.send("SimpleToggleSprint", "PlayerAPI has been detected.\nAlthough supported, it is not recommended or needed for any recent mod.\nIt is recommended you delete it.")
                 hasPlayerAPI = true
                 break
             }

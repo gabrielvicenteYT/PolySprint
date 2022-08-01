@@ -18,24 +18,35 @@
 
 pluginManagement {
     repositories {
-        mavenLocal()
         gradlePluginPortal()
         mavenCentral()
-        maven {
-            name = "sonatype"
-            url = uri("https://oss.sonatype.org/content/repositories/snapshots")
-        }
-        maven { url = uri("https://maven.minecraftforge.net/") }
-        maven { url = uri("https://jitpack.io") }
+        maven("https://repo.polyfrost.cc/releases")
+        maven("https://maven.architectury.dev/")
+    }
+    plugins {
+        val egtVersion = "0.1.11"
+        id("gg.essential.multi-version.root") version egtVersion
     }
     resolutionStrategy {
         eachPlugin {
-            when (requested.id.id) {
-                "net.minecraftforge.gradle.forge" -> useModule("com.github.Skytils:ForgeGradle:${requested.version}")
-                "org.spongepowered.mixin" -> useModule("com.github.Skytils:mixingradle:${requested.version}")
+            if (requested.id.id == "io.github.juuxel.loom-quiltflower-mini") {
+                useModule("com.github.wyvest:loom-quiltflower-mini:${requested.version}")
             }
         }
     }
 }
 
-rootProject.name = "SimpleToggleSprint"
+val mod_name: String by settings
+
+rootProject.name = mod_name
+rootProject.buildFileName = "root.gradle.kts"
+
+listOf(
+    "1.8.9-forge"
+).forEach { version ->
+    include(":$version")
+    project(":$version").apply {
+        projectDir = file("versions/$version")
+        buildFileName = "../../build.gradle.kts"
+    }
+}

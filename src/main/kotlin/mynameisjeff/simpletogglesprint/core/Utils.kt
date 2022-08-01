@@ -18,17 +18,13 @@
 
 package mynameisjeff.simpletogglesprint.core
 
-import gg.essential.universal.UKeyboard
-import gg.essential.universal.UScreen
+import cc.polyfrost.oneconfig.libs.universal.UKeyboard
+import cc.polyfrost.oneconfig.libs.universal.UScreen
 import mynameisjeff.simpletogglesprint.SimpleToggleSprint.gameSettings
 import mynameisjeff.simpletogglesprint.mixins.accessors.AccessorKeybinding
-import net.minecraft.client.gui.Gui
 import net.minecraft.client.settings.KeyBinding
 import net.minecraftforge.common.ForgeVersion
 import org.lwjgl.input.Mouse
-import java.lang.invoke.MethodHandle
-import java.lang.invoke.MethodHandles
-import java.lang.invoke.MethodType
 import kotlin.reflect.full.staticProperties
 
 val is1_12_2 by lazy { 
@@ -36,26 +32,14 @@ val is1_12_2 by lazy {
         it.name == "mcVersion"
     }!!.get() as String).startsWith("1.12")
 }
-
-val drawRect1_12: MethodHandle by lazy {
-    MethodHandles.publicLookup().findStatic(Gui::class.java,"drawRect", MethodType.methodType(Void.TYPE, Int::class.java, Int::class.java, Int::class.java, Int::class.java, Int::class.java))
-}
-
 fun shouldSetSprint(keyBinding: KeyBinding): Boolean {
-    return (keyBinding as AccessorKeybinding).isKeyDown || UScreen.currentScreen == null && Config.enabledToggleSprint && Config.toggleSprintState && keyBinding === gameSettings.keyBindSprint
+    return (keyBinding as AccessorKeybinding).isKeyDown || UScreen.currentScreen == null && SimpleToggleSprintConfig.enabled && SimpleToggleSprintConfig.toggleSprint && SimpleToggleSprintConfig.toggleSprintState && keyBinding === gameSettings.keyBindSprint
 }
 
 fun shouldSetSneak(keyBinding: KeyBinding): Boolean {
-    return (keyBinding as AccessorKeybinding).isKeyDown || UScreen.currentScreen == null && Config.enabledToggleSneak && Config.toggleSneakState && keyBinding === gameSettings.keyBindSneak
+    return (keyBinding as AccessorKeybinding).isKeyDown || UScreen.currentScreen == null && SimpleToggleSprintConfig.enabled && SimpleToggleSprintConfig.toggleSneak && SimpleToggleSprintConfig.toggleSneakState && keyBinding === gameSettings.keyBindSneak
 }
 
 fun checkKeyCode(keyCode: Int) = if (keyCode > 0) UKeyboard.isKeyDown(keyCode) else Mouse.isButtonDown(
     keyCode + 100
 )
-
-fun drawRect(left: Int, top: Int, right: Int, bottom: Int, color: Int) {
-    if (!is1_12_2) Gui.drawRect(left, top, right, bottom, color)
-    else {
-        drawRect1_12.invokeExact(left, top, right, bottom, color)
-    }
-}

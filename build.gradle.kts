@@ -1,160 +1,160 @@
-/*
- *   SimpleToggleSprint
- *   Copyright (C) 2021  My-Name-Is-Jeff
- *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU Affero General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU Affero General Public License for more details.
- *
- *   You should have received a copy of the GNU Affero General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import net.minecraftforge.gradle.user.IReobfuscator
-import net.minecraftforge.gradle.user.ReobfMappingType.SEARGE
-import net.minecraftforge.gradle.user.TaskSingleReobf
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import gg.essential.gradle.util.noServerRunConfigs
 
 plugins {
-    kotlin("jvm") version "1.6.10"
-    id("net.minecraftforge.gradle.forge") version "6f5327"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("org.spongepowered.mixin") version "d5f9873d60"
+    kotlin("jvm")
+    id("gg.essential.multi-version")
+    id("gg.essential.defaults.repo")
+    id("gg.essential.defaults.java")
+    id("gg.essential.defaults.loom")
+    id("com.github.johnrengelman.shadow")
+    id("net.kyori.blossom") version "1.3.0"
+    id("io.github.juuxel.loom-quiltflower-mini")
+    id("signing")
     java
 }
 
-version = "2.2.0"
-group = "mynameisjeff.simpletogglesprint"
+val mod_name: String by project
+val mod_version: String by project
+val mod_id: String by project
 
-minecraft {
-    version = "1.8.9-11.15.1.2318-1.8.9"
-    runDir = "run"
-    mappings = "stable_22"
-    makeObfSourceJar = false
-    isGitVersion = false
-    clientJvmArgs + arrayOf(
-        "-Delementa.dev=true",
-        "-Delementa.debug=true"
-    )
-    clientRunArgs + arrayOf(
-        "--tweakClass gg.essential.loader.stage0.EssentialSetupTweaker",
-        "--mixin mixins.simpletogglesprint.json"
-    )
+preprocess {
+    vars.put("MODERN", if (project.platform.mcMinor >= 16) 1 else 0)
 }
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven("https://repo.spongepowered.org/repository/maven-public/")
-    maven("https://repo.sk1er.club/repository/maven-public/")
-    maven("https://repo.sk1er.club/repository/maven-releases/")
-    maven("https://jitpack.io")
+blossom {
+    replaceToken("@VER@", mod_version)
+    replaceToken("@NAME@", mod_name)
+    replaceToken("@ID@", mod_id)
 }
 
-val shadowMe: Configuration by configurations.creating {
+version = mod_version
+group = "cc.polyfrost"
+base {
+    archivesName.set("$mod_id (1.8.9 & 1.12.2)")
+}
+loom {
+    noServerRunConfigs()
+    if (project.platform.isLegacyForge) {
+        launchConfigs.named("client") {
+            arg("--tweakClass", "cc.polyfrost.oneconfigwrapper.OneConfigWrapper")
+            property("mixin.debug.export", "true")
+        }
+    }
+    if (project.platform.isForge) {
+        forge {
+            mixinConfig("mixins.${mod_id}.json")
+        }
+    }
+    mixin.defaultRefmapName.set("mixins.${mod_id}.refmap.json")
+}
+
+val shade: Configuration by configurations.creating {
     configurations.implementation.get().extendsFrom(this)
-}
-
-dependencies {
-    annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
-    implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT")
-
-    shadowMe("gg.essential:loader-launchwrapper:1.1.3")
-    implementation("gg.essential:essential-1.8.9-forge:1709")
-}
-
-mixin {
-    disableRefMapWarning = true
-    defaultObfuscationEnv = searge
-    add(sourceSets.main.get(), "mixins.simpletogglesprint.refmap.json")
 }
 
 sourceSets {
     main {
-        ext["refmap"] = "mixins.simpletogglesprint.refmap.json"
-        output.setResourcesDir(file("${buildDir}/classes/kotlin/main"))
+        output.setResourcesDir(java.classesDirectory)
     }
 }
 
-configure<NamedDomainObjectContainer<IReobfuscator>> {
-    clear()
-    create("shadowJar") {
-        mappingType = SEARGE
-        classpath = sourceSets.main.get().compileClasspath
+repositories {
+    maven("https://repo.polyfrost.cc/releases")
+}
+
+dependencies {
+    modCompileOnly("cc.polyfrost:oneconfig-$platform:0.1.0-alpha+")
+
+    if (platform.isLegacyForge) {
+        compileOnly("org.spongepowered:mixin:0.7.11-SNAPSHOT")
+        shade("cc.polyfrost:oneconfig-wrapper-launchwrapper:1.0.0-alpha+")
+    }
+}
+
+tasks.processResources {
+    inputs.property("id", mod_id)
+    inputs.property("name", mod_name)
+    val java = if (project.platform.mcMinor >= 18) {
+        17
+    } else {
+        if (project.platform.mcMinor == 17) 16 else 8
+    }
+    val compatLevel = "JAVA_${java}"
+    inputs.property("java", java)
+    inputs.property("java_level", compatLevel)
+    inputs.property("version", mod_version)
+    inputs.property("mcVersionStr", project.platform.mcVersionStr)
+    filesMatching(listOf("mcmod.info", "mixins.${mod_id}.json", "mods.toml")) {
+        expand(
+            mapOf(
+                "id" to mod_id,
+                "name" to mod_name,
+                "java" to java,
+                "java_level" to compatLevel,
+                "version" to mod_version,
+                "mcVersionStr" to project.platform.mcVersionStr
+            )
+        )
+    }
+    filesMatching("fabric.mod.json") {
+        expand(
+            mapOf(
+                "id" to mod_id,
+                "name" to mod_name,
+                "java" to java,
+                "java_level" to compatLevel,
+                "version" to mod_version,
+                "mcVersionStr" to project.platform.mcVersionStr.substringBeforeLast(".") + ".x"
+            )
+        )
+    }
+}
+
+afterEvaluate {
+    if (rootProject.file("LICENSE-TEMPLATE").exists()) {
+        logger.error("-------------------------------------------------------")
+        logger.error("PLEASE REPLACE THE `LICENSE-TEMPLATE` FILE WITH YOUR OWN LICENSE")
+        logger.error("-------------------------------------------------------")
     }
 }
 
 tasks {
-    processResources {
-        inputs.property("version", project.version)
-        inputs.property("mcversion", project.minecraft.version)
-
-        filesMatching("mcmod.info") {
-            expand(mapOf("version" to project.version, "mcversion" to project.minecraft.version))
+    withType(Jar::class.java) {
+        if (project.platform.isFabric) {
+            exclude("mcmod.info", "mods.toml")
+        } else {
+            exclude("fabric.mod.json")
+            if (project.platform.isLegacyForge) {
+                exclude("mods.toml")
+            } else {
+                exclude("mcmod.info")
+            }
         }
     }
-    named<Jar>("jar") {
-        archiveBaseName.set("SimpleToggleSprint")
+    named<ShadowJar>("shadowJar") {
+        archiveClassifier.set("dev")
+        configurations = listOf(shade)
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+    remapJar {
+        input.set(shadowJar.get().archiveFile)
+        archiveClassifier.set("")
+    }
+    jar {
         manifest {
             attributes(
                 mapOf(
-                    "FMLCorePluginContainsFMLMod" to true,
-                    "ForceLoadAsMod" to true,
-                    "MixinConfigs" to "mixins.simpletogglesprint.json",
                     "ModSide" to "CLIENT",
-                    "TweakClass" to "gg.essential.loader.stage0.EssentialSetupTweaker",
-                    "TweakOrder" to "0"
+                    "ForceLoadAsMod" to true,
+                    "TweakOrder" to "0",
+                    "MixinConfigs" to "mixins.${mod_id}.json",
+                    "TweakClass" to "cc.polyfrost.oneconfigwrapper.OneConfigWrapper"
                 )
             )
         }
+        dependsOn(shadowJar)
+        archiveClassifier.set("")
         enabled = false
-    }
-    named<ShadowJar>("shadowJar") {
-        archiveFileName.set(jar.get().archiveFileName)
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        configurations = listOf(shadowMe)
-
-        exclude(
-            "**/LICENSE.md",
-            "**/LICENSE.txt",
-            "**/LICENSE",
-            "**/NOTICE",
-            "**/NOTICE.txt",
-            "pack.mcmeta",
-            "dummyThing",
-            "**/module-info.class",
-            "META-INF/proguard/**",
-            "META-INF/maven/**",
-            "META-INF/versions/**",
-            "META-INF/com.android.tools/**",
-            "fabric.mod.json"
-        )
-        mergeServiceFiles()
-    }
-    withType<JavaCompile> {
-        options.encoding = "UTF-8"
-    }
-    withType<KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = "1.8"
-            freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
-        }
-        kotlinDaemonJvmArguments.set(listOf("-Xmx2G", "-Dkotlin.enableCacheBuilding=true", "-Dkotlin.useParallelTasks=true", "-Dkotlin.enableFastIncremental=true"))
-    }
-    named<TaskSingleReobf>("reobfJar") {
-        enabled = false
-    }
-    named<TaskSingleReobf>("reobfShadowJar") {
-        mustRunAfter(shadowJar)
     }
 }
-
-java.sourceCompatibility = JavaVersion.VERSION_1_8
-java.targetCompatibility = JavaVersion.VERSION_1_8

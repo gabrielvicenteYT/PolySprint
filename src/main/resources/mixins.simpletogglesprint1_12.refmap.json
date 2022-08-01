@@ -5,10 +5,6 @@
       "updatePlayerMoveState": "Lnet/minecraft/util/MovementInputFromOptions;func_78898_a()V",
       "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z": "Lnet/minecraft/client/settings/KeyBinding;func_151470_d()Z"
     },
-    "mynameisjeff/simpletogglesprint/mixins/MixinGuiIngameMenu": {
-      "actionPerformed": "Lnet/minecraft/client/gui/GuiIngameMenu;func_146284_a(Lnet/minecraft/client/gui/GuiButton;)V",
-      "initGui": "Lnet/minecraft/client/gui/GuiIngameMenu;func_73866_w_()V"
-    },
     "mynameisjeff/simpletogglesprint/mixins/accessors/AccessorGameSettings": {
       "keyBindSneak": "field_74311_E:Lnet/minecraft/client/settings/KeyBinding;",
       "keyBindSprint": "field_151444_V:Lnet/minecraft/client/settings/KeyBinding;"
@@ -47,10 +43,6 @@
         "updatePlayerMoveState": "Lbev;a()V",
         "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z": "Lavb;d()Z"
       },
-      "mynameisjeff/simpletogglesprint/mixins/MixinGuiIngameMenu": {
-        "actionPerformed": "Laxp;a(Lavs;)V",
-        "initGui": "Laxp;b()V"
-      },
       "mynameisjeff/simpletogglesprint/mixins/accessors/AccessorGameSettings": {
         "keyBindSneak": "ad:Lavb;",
         "keyBindSprint": "ae:Lavb;"
@@ -87,10 +79,6 @@
       "mynameisjeff/simpletogglesprint/mixins/MixinMovementInputFromOptions": {
         "updatePlayerMoveState": "Lnet/minecraft/util/MovementInputFromOptions;func_78898_a()V",
         "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z": "Lnet/minecraft/client/settings/KeyBinding;func_151470_d()Z"
-      },
-      "mynameisjeff/simpletogglesprint/mixins/MixinGuiIngameMenu": {
-        "actionPerformed": "Lnet/minecraft/client/gui/GuiIngameMenu;func_146284_a(Lnet/minecraft/client/gui/GuiButton;)V",
-        "initGui": "Lnet/minecraft/client/gui/GuiIngameMenu;func_73866_w_()V"
       },
       "mynameisjeff/simpletogglesprint/mixins/accessors/AccessorGameSettings": {
         "keyBindSneak": "field_74311_E:Lnet/minecraft/client/settings/KeyBinding;",
