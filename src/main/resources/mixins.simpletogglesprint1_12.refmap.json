@@ -24,12 +24,8 @@
     },
     "mynameisjeff/simpletogglesprint/mixins/MixinEntityPlayerSP": {
       "onLivingUpdate": "Lnet/minecraft/client/entity/EntityPlayerSP;func_70636_d()V",
-      "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z": "Lnet/minecraft/client/settings/KeyBinding;func_151470_d()Z"
-    },
-    "mynameisjeff/simpletogglesprint/mixins/accessors/AccessorFontRenderer": {
-      "getStringWidth": "func_78256_a(Ljava/lang/String;)I",
-      "FONT_HEIGHT": "field_78288_b:I",
-      "drawString": "func_175065_a(Ljava/lang/String;FFIZ)I"
+      "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z": "Lnet/minecraft/client/settings/KeyBinding;func_151470_d()Z",
+      "Lnet/minecraft/client/entity/EntityPlayerSP;onGround:Z": "Lnet/minecraft/client/entity/EntityPlayerSP;field_70122_E:Z"
     },
     "mynameisjeff/simpletogglesprint/mixins/accessors/AccessorEntity": {
       "isRiding": "func_184218_aH()Z",
@@ -62,12 +58,8 @@
       },
       "mynameisjeff/simpletogglesprint/mixins/MixinEntityPlayerSP": {
         "onLivingUpdate": "Lbew;m()V",
-        "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z": "Lavb;d()Z"
-      },
-      "mynameisjeff/simpletogglesprint/mixins/accessors/AccessorFontRenderer": {
-        "getStringWidth": "a(Ljava/lang/String;)I",
-        "FONT_HEIGHT": "a:I",
-        "drawString": "a(Ljava/lang/String;FFIZ)I"
+        "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z": "Lavb;d()Z",
+        "Lnet/minecraft/client/entity/EntityPlayerSP;onGround:Z": "Lve;z:Z"
       },
       "mynameisjeff/simpletogglesprint/mixins/accessors/AccessorEntity": {
         "isRiding": "au()Z",
@@ -99,7 +91,8 @@
       },
       "mynameisjeff/simpletogglesprint/mixins/MixinEntityPlayerSP": {
         "onLivingUpdate": "Lnet/minecraft/client/entity/EntityPlayerSP;func_70636_d()V",
-        "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z": "Lnet/minecraft/client/settings/KeyBinding;func_151470_d()Z"
+        "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z": "Lnet/minecraft/client/settings/KeyBinding;func_151470_d()Z",
+        "Lnet/minecraft/client/entity/EntityPlayerSP;onGround:Z": "Lnet/minecraft/client/entity/EntityPlayerSP;field_70122_E:Z"
       },
       "mynameisjeff/simpletogglesprint/mixins/accessors/AccessorFontRenderer": {
         "getStringWidth": "func_78256_a(Ljava/lang/String;)I",

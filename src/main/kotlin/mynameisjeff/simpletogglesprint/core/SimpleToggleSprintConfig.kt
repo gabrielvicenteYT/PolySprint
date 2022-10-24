@@ -8,7 +8,6 @@ import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
 import cc.polyfrost.oneconfig.config.migration.VigilanceMigrator
 import cc.polyfrost.oneconfig.hud.TextHud
-import cc.polyfrost.oneconfig.libs.universal.UResolution
 import mynameisjeff.simpletogglesprint.SimpleToggleSprint
 import mynameisjeff.simpletogglesprint.core.SimpleToggleSprintConfig.ToggleSprintHud.DisplayState.Companion.activeDisplay
 import mynameisjeff.simpletogglesprint.mixins.accessors.AccessorEntityPlayer
@@ -27,6 +26,11 @@ object SimpleToggleSprintConfig : Config(Mod("SimpleToggleSprint", ModType.PVP, 
     )
     var toggleSneak = false
 
+    @Switch(
+        name = "Disable W-Tap Sprint"
+    )
+    var disableWTapSprint = true
+
     @JvmField
     var toggleSprintState = false
 
@@ -36,14 +40,14 @@ object SimpleToggleSprintConfig : Config(Mod("SimpleToggleSprint", ModType.PVP, 
     @Switch(
         name = "Seperate Keybind for Toggle Sprint",
         subcategory = "Toggle Sprint",
-        //description = "Use a seperate keybind for Toggle Sprint.\nConfigure it in the In-Game Controls menu."
+        description = "Use a seperate keybind for Toggle Sprint.\nConfigure it in the In-Game Controls menu."
     )
     var keybindToggleSprint = false
 
     @Switch(
         name = "Seperate Keybind for Toggle Sneak",
         subcategory = "Toggle Sneak",
-        //description = "Use a seperate keybind for Toggle Sneak.\nConfigure it in the In-Game Controls menu."
+        description = "Use a seperate keybind for Toggle Sneak.\nConfigure it in the In-Game Controls menu."
     )
     var keybindToggleSneak = false
 
@@ -53,7 +57,7 @@ object SimpleToggleSprintConfig : Config(Mod("SimpleToggleSprint", ModType.PVP, 
     )
     var hud = ToggleSprintHud()
 
-    class ToggleSprintHud : TextHud(true, 0, UResolution.scaledHeight - 19) {
+    class ToggleSprintHud : TextHud(true, 0, 1080 - 19) {
         @Switch(name = "Brackets")
         private var brackets = true
 

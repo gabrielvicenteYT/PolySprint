@@ -18,7 +18,7 @@
 
 package mynameisjeff.simpletogglesprint.tweaker
 
-import cc.polyfrost.oneconfig.utils.notifications.Notifications
+import cc.polyfrost.oneconfig.utils.Notifications
 import mynameisjeff.simpletogglesprint.core.is1_12_2
 import net.minecraftforge.fml.relauncher.CoreModManager
 import org.spongepowered.asm.lib.tree.ClassNode

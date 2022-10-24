@@ -22,10 +22,9 @@ import cc.polyfrost.oneconfig.utils.commands.annotations.Main
 import mynameisjeff.simpletogglesprint.core.SimpleToggleSprintConfig
 
 @Command("simpletogglesprint", aliases = ["sts", "togglesprint", "togglesneak"])
-object SimpleToggleSprintCommand {
+class SimpleToggleSprintCommand {
 
     @Main
-    @JvmStatic
     fun execCommand() {
         SimpleToggleSprintConfig.openGui()
     }

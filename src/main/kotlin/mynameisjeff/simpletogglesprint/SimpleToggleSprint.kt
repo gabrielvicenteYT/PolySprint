@@ -65,7 +65,7 @@ object SimpleToggleSprint {
 
     @Mod.EventHandler
     fun onPostInit(event: FMLPostInitializationEvent) {
-        CommandManager.INSTANCE.registerCommand(SimpleToggleSprintCommand::class.java)
+        CommandManager.INSTANCE.registerCommand(SimpleToggleSprintCommand())
         ClientRegistry.registerKeyBinding(keySprint)
         ClientRegistry.registerKeyBinding(keySneak)
     }

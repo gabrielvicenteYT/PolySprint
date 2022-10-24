@@ -19,11 +19,13 @@
 package mynameisjeff.simpletogglesprint.mixins;
 
 import com.mojang.authlib.GameProfile;
+import mynameisjeff.simpletogglesprint.core.SimpleToggleSprintConfig;
 import mynameisjeff.simpletogglesprint.core.UtilsKt;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.world.World;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -38,5 +40,10 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
     @Redirect(method = "onLivingUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z"))
     private boolean setSprintState(KeyBinding keyBinding) {
         return UtilsKt.shouldSetSprint(keyBinding);
+    }
+
+    @Redirect(method = "onLivingUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/EntityPlayerSP;onGround:Z", ordinal = 0, opcode = Opcodes.GETFIELD))
+    private boolean redirectWTap(EntityPlayerSP instance) {
+        return !SimpleToggleSprintConfig.INSTANCE.getDisableWTapSprint();
     }
 }

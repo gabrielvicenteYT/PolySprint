@@ -5,7 +5,6 @@
   "mixins": [
     "accessors.AccessorEntity",
     "accessors.AccessorEntityPlayer",
-    "accessors.AccessorFontRenderer",
     "accessors.AccessorGameSettings",
     "accessors.AccessorKeybinding",
     "accessors.AccessorPlayerCapabilities",
