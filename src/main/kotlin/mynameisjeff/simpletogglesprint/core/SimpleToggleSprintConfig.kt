@@ -2,12 +2,15 @@ package mynameisjeff.simpletogglesprint.core
 
 import cc.polyfrost.oneconfig.config.Config
 import cc.polyfrost.oneconfig.config.annotations.HUD
+import cc.polyfrost.oneconfig.config.annotations.KeyBind
 import cc.polyfrost.oneconfig.config.annotations.Switch
 import cc.polyfrost.oneconfig.config.annotations.Text
+import cc.polyfrost.oneconfig.config.core.OneKeyBind
 import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
 import cc.polyfrost.oneconfig.config.migration.VigilanceMigrator
 import cc.polyfrost.oneconfig.hud.TextHud
+import cc.polyfrost.oneconfig.libs.universal.UKeyboard
 import mynameisjeff.simpletogglesprint.SimpleToggleSprint
 import mynameisjeff.simpletogglesprint.core.SimpleToggleSprintConfig.ToggleSprintHud.DisplayState.Companion.activeDisplay
 import mynameisjeff.simpletogglesprint.mixins.accessors.AccessorEntityPlayer
@@ -40,22 +43,60 @@ object SimpleToggleSprintConfig : Config(Mod("SimpleToggleSprint", ModType.PVP, 
     @Switch(
         name = "Seperate Keybind for Toggle Sprint",
         subcategory = "Toggle Sprint",
-        description = "Use a seperate keybind for Toggle Sprint.\nConfigure it in the In-Game Controls menu."
+        description = "Use a seperate keybind for Toggle Sprint."
     )
     var keybindToggleSprint = false
+
+    @KeyBind(
+        name = "Toggle Sprint Keybind",
+        subcategory = "Toggle Sprint"
+    )
+    var keybindToggleSprintKey = OneKeyBind(UKeyboard.KEY_NONE)
 
     @Switch(
         name = "Seperate Keybind for Toggle Sneak",
         subcategory = "Toggle Sneak",
-        description = "Use a seperate keybind for Toggle Sneak.\nConfigure it in the In-Game Controls menu."
+        description = "Use a seperate keybind for Toggle Sneak."
     )
     var keybindToggleSneak = false
+
+    @KeyBind(
+        name = "Toggle Sneak Keybind",
+        subcategory = "Toggle Sneak"
+    )
+    var keybindToggleSneakKey = OneKeyBind(UKeyboard.KEY_NONE)
 
     @HUD(
         name = "HUD",
         subcategory = "HUD"
     )
     var hud = ToggleSprintHud()
+
+    init {
+        initialize()
+        addDependency("keybindToggleSprint", "toggleSprint")
+        addDependency("keybindToggleSneak", "toggleSneak")
+        addDependency("keybindToggleSprintKey", "keybindToggleSprint")
+        addDependency("keybindToggleSneakKey", "keybindToggleSneak")
+        registerKeyBind(keybindToggleSprintKey) {
+            if (keybindToggleSprint) {
+                if (enabled && toggleSprint && !SimpleToggleSprint.sprintHeld) {
+                    toggleSprintState = !toggleSprintState
+                    SimpleToggleSprintConfig.save()
+                }
+                SimpleToggleSprint.sprintHeld = !SimpleToggleSprint.sprintHeld
+            }
+        }
+        registerKeyBind(keybindToggleSneakKey) {
+            if (keybindToggleSneak) {
+                if (enabled && toggleSneak && !SimpleToggleSprint.sneakHeld) {
+                    toggleSneakState = !toggleSneakState
+                    SimpleToggleSprintConfig.save()
+                }
+                SimpleToggleSprint.sneakHeld = !SimpleToggleSprint.sneakHeld
+            }
+        }
+    }
 
     class ToggleSprintHud : TextHud(true, 0, 1080 - 19) {
         @Switch(name = "Brackets")

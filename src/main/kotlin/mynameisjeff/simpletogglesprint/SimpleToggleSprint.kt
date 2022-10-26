@@ -17,7 +17,6 @@
  */
 package mynameisjeff.simpletogglesprint
 
-import cc.polyfrost.oneconfig.libs.universal.UKeyboard
 import cc.polyfrost.oneconfig.libs.universal.UMinecraft
 import cc.polyfrost.oneconfig.utils.commands.CommandManager
 import mynameisjeff.simpletogglesprint.commands.SimpleToggleSprintCommand
@@ -25,9 +24,7 @@ import mynameisjeff.simpletogglesprint.core.SimpleToggleSprintConfig
 import mynameisjeff.simpletogglesprint.core.checkKeyCode
 import mynameisjeff.simpletogglesprint.mixins.accessors.AccessorGameSettings
 import mynameisjeff.simpletogglesprint.mixins.accessors.AccessorKeybinding
-import net.minecraft.client.settings.KeyBinding
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
@@ -51,23 +48,19 @@ object SimpleToggleSprint {
         get() = UMinecraft.getPlayer()
     val gameSettings
         get() = UMinecraft.getSettings() as AccessorGameSettings
-    val keySprint = KeyBinding("Toggle Sprint", UKeyboard.KEY_NONE, "SimpleToggleSprint")
-    val keySneak = KeyBinding("Toggle Sneak", UKeyboard.KEY_NONE, "SimpleToggleSprint")
 
     var sprintHeld = false
     var sneakHeld = false
 
     @Mod.EventHandler
     fun onInit(event: FMLInitializationEvent) {
-        SimpleToggleSprintConfig.initialize()
+        SimpleToggleSprintConfig
         MinecraftForge.EVENT_BUS.register(this)
     }
 
     @Mod.EventHandler
     fun onPostInit(event: FMLPostInitializationEvent) {
         CommandManager.INSTANCE.registerCommand(SimpleToggleSprintCommand())
-        ClientRegistry.registerKeyBinding(keySprint)
-        ClientRegistry.registerKeyBinding(keySneak)
     }
 
 
@@ -76,9 +69,7 @@ object SimpleToggleSprint {
         if (!SimpleToggleSprintConfig.enabled) return
         val sprint = (gameSettings.keyBindSprint as AccessorKeybinding).keyCode
         val sneak = (gameSettings.keyBindSneak as AccessorKeybinding).keyCode
-        val sprintToggle = (keySprint as AccessorKeybinding).keyCode
-        val sneakToggle = (keySneak as AccessorKeybinding).keyCode
-        if ((SimpleToggleSprintConfig.keybindToggleSprint && checkKeyCode(sprintToggle)) || (!SimpleToggleSprintConfig.keybindToggleSprint && checkKeyCode(sprint))) {
+        if (!SimpleToggleSprintConfig.keybindToggleSprint && checkKeyCode(sprint)) {
             if (SimpleToggleSprintConfig.enabled && SimpleToggleSprintConfig.toggleSprint && !sprintHeld) {
                 SimpleToggleSprintConfig.toggleSprintState = !SimpleToggleSprintConfig.toggleSprintState
                 SimpleToggleSprintConfig.save()
@@ -87,7 +78,7 @@ object SimpleToggleSprint {
         } else {
             sprintHeld = false
         }
-        if ((SimpleToggleSprintConfig.keybindToggleSneak && checkKeyCode(sneakToggle)) || (!SimpleToggleSprintConfig.keybindToggleSneak && checkKeyCode(sneak))) {
+        if (!SimpleToggleSprintConfig.keybindToggleSneak && checkKeyCode(sneak)) {
             if (SimpleToggleSprintConfig.enabled && SimpleToggleSprintConfig.toggleSneak && !sneakHeld) {
                 SimpleToggleSprintConfig.toggleSneakState = !SimpleToggleSprintConfig.toggleSneakState
                 SimpleToggleSprintConfig.save()
