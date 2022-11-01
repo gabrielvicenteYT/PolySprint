@@ -21,23 +21,15 @@ package mynameisjeff.simpletogglesprint.core
 import cc.polyfrost.oneconfig.libs.universal.UKeyboard
 import cc.polyfrost.oneconfig.libs.universal.UScreen
 import mynameisjeff.simpletogglesprint.SimpleToggleSprint.gameSettings
-import mynameisjeff.simpletogglesprint.mixins.accessors.AccessorKeybinding
 import net.minecraft.client.settings.KeyBinding
-import net.minecraftforge.common.ForgeVersion
 import org.lwjgl.input.Mouse
-import kotlin.reflect.full.staticProperties
 
-val is1_12_2 by lazy { 
-    (ForgeVersion::class.staticProperties.find { 
-        it.name == "mcVersion"
-    }!!.get() as String).startsWith("1.12")
-}
 fun shouldSetSprint(keyBinding: KeyBinding): Boolean {
-    return (keyBinding as AccessorKeybinding).isKeyDown || UScreen.currentScreen == null && SimpleToggleSprintConfig.enabled && SimpleToggleSprintConfig.toggleSprint && SimpleToggleSprintConfig.toggleSprintState && keyBinding === gameSettings.keyBindSprint
+    return keyBinding.isKeyDown || UScreen.currentScreen == null && SimpleToggleSprintConfig.enabled && SimpleToggleSprintConfig.toggleSprint && SimpleToggleSprintConfig.toggleSprintState && keyBinding === gameSettings.keyBindSprint
 }
 
 fun shouldSetSneak(keyBinding: KeyBinding): Boolean {
-    return (keyBinding as AccessorKeybinding).isKeyDown || UScreen.currentScreen == null && SimpleToggleSprintConfig.enabled && SimpleToggleSprintConfig.toggleSneak && SimpleToggleSprintConfig.toggleSneakState && keyBinding === gameSettings.keyBindSneak
+    return keyBinding.isKeyDown || UScreen.currentScreen == null && SimpleToggleSprintConfig.enabled && SimpleToggleSprintConfig.toggleSneak && SimpleToggleSprintConfig.toggleSneakState && keyBinding === gameSettings.keyBindSneak
 }
 
 fun checkKeyCode(keyCode: Int) = if (keyCode > 0) UKeyboard.isKeyDown(keyCode) else Mouse.isButtonDown(

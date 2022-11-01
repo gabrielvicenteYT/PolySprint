@@ -22,8 +22,6 @@ import cc.polyfrost.oneconfig.utils.commands.CommandManager
 import mynameisjeff.simpletogglesprint.commands.SimpleToggleSprintCommand
 import mynameisjeff.simpletogglesprint.core.SimpleToggleSprintConfig
 import mynameisjeff.simpletogglesprint.core.checkKeyCode
-import mynameisjeff.simpletogglesprint.mixins.accessors.AccessorGameSettings
-import mynameisjeff.simpletogglesprint.mixins.accessors.AccessorKeybinding
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
@@ -35,7 +33,6 @@ import net.minecraftforge.fml.common.gameevent.InputEvent
     modid = SimpleToggleSprint.MODID,
     name = SimpleToggleSprint.MOD_NAME,
     version = SimpleToggleSprint.VERSION,
-    acceptedMinecraftVersions = "[1.8.9,1.12.2]",
     clientSideOnly = true,
     modLanguageAdapter = "cc.polyfrost.oneconfig.utils.KotlinLanguageAdapter"
 )
@@ -47,7 +44,7 @@ object SimpleToggleSprint {
     val player
         get() = UMinecraft.getPlayer()
     val gameSettings
-        get() = UMinecraft.getSettings() as AccessorGameSettings
+        get() = UMinecraft.getSettings()
 
     var sprintHeld = false
     var sneakHeld = false
@@ -67,8 +64,8 @@ object SimpleToggleSprint {
     @SubscribeEvent
     fun onInput(event: InputEvent) {
         if (!SimpleToggleSprintConfig.enabled) return
-        val sprint = (gameSettings.keyBindSprint as AccessorKeybinding).keyCode
-        val sneak = (gameSettings.keyBindSneak as AccessorKeybinding).keyCode
+        val sprint = gameSettings.keyBindSprint.keyCode
+        val sneak = gameSettings.keyBindSneak.keyCode
         if (!SimpleToggleSprintConfig.keybindToggleSprint && checkKeyCode(sprint)) {
             if (SimpleToggleSprintConfig.enabled && SimpleToggleSprintConfig.toggleSprint && !sprintHeld) {
                 SimpleToggleSprintConfig.toggleSprintState = !SimpleToggleSprintConfig.toggleSprintState

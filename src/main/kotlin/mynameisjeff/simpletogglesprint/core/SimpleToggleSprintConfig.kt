@@ -13,8 +13,7 @@ import cc.polyfrost.oneconfig.hud.TextHud
 import cc.polyfrost.oneconfig.libs.universal.UKeyboard
 import mynameisjeff.simpletogglesprint.SimpleToggleSprint
 import mynameisjeff.simpletogglesprint.core.SimpleToggleSprintConfig.ToggleSprintHud.DisplayState.Companion.activeDisplay
-import mynameisjeff.simpletogglesprint.mixins.accessors.AccessorEntityPlayer
-import mynameisjeff.simpletogglesprint.mixins.accessors.AccessorPlayerCapabilities
+import net.minecraft.entity.player.EntityPlayer
 import java.io.File
 
 object SimpleToggleSprintConfig : Config(Mod("SimpleToggleSprint", ModType.PVP, VigilanceMigrator(File("./config/simpletogglesprint.toml").absolutePath)), "simpletogglesprint.json") {
@@ -185,11 +184,11 @@ object SimpleToggleSprintConfig : Config(Mod("SimpleToggleSprint", ModType.PVP, 
 
         private fun getCompleteText(text: String?) = if (brackets && text?.isNotEmpty() == true) "[$text]" else text
 
-        private enum class DisplayState(val displayText: ToggleSprintHud.() -> String, val displayCheck: (AccessorEntityPlayer) -> Boolean) {
-            DESCENDINGHELD({ descendingHeld }, { (it.capabilities as AccessorPlayerCapabilities).isFlying && it.isSneaking && SimpleToggleSprint.sneakHeld }),
-            DESCENDINGTOGGLED({ descendingToggled }, { (it.capabilities as AccessorPlayerCapabilities).isFlying && SimpleToggleSprintConfig.enabled && toggleSprint && toggleSneakState }),
-            DESCENDING({ descending }, { (it.capabilities as AccessorPlayerCapabilities).isFlying && it.isSneaking }),
-            FLYING({ flying }, { (it.capabilities as AccessorPlayerCapabilities).isFlying }),
+        private enum class DisplayState(val displayText: ToggleSprintHud.() -> String, val displayCheck: (EntityPlayer) -> Boolean) {
+            DESCENDINGHELD({ descendingHeld }, { it.capabilities.isFlying && it.isSneaking && SimpleToggleSprint.sneakHeld }),
+            DESCENDINGTOGGLED({ descendingToggled }, { it.capabilities.isFlying && SimpleToggleSprintConfig.enabled && toggleSprint && toggleSneakState }),
+            DESCENDING({ descending }, { it.capabilities.isFlying && it.isSneaking }),
+            FLYING({ flying }, { it.capabilities.isFlying }),
             RIDING({ riding }, { it.isRiding }),
             SNEAKHELD({ sneakHeld }, { it.isSneaking && SimpleToggleSprint.sneakHeld }),
             TOGGLESNEAK({ sneakToggle }, { SimpleToggleSprintConfig.enabled && toggleSneak && toggleSneakState }),
@@ -199,7 +198,7 @@ object SimpleToggleSprintConfig : Config(Mod("SimpleToggleSprint", ModType.PVP, 
             SPRINTING({ sprint }, { it.isSprinting });
 
             val isActive: Boolean
-                get() = displayCheck(SimpleToggleSprint.player!! as AccessorEntityPlayer)
+                get() = displayCheck(SimpleToggleSprint.player!!)
 
             companion object {
                 val ToggleSprintHud.activeDisplay: String?

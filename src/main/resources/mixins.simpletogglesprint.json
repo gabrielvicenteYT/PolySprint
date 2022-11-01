@@ -2,13 +2,8 @@
   "compatibilityLevel": "JAVA_8",
   "package": "mynameisjeff.simpletogglesprint.mixins",
   "plugin": "mynameisjeff.simpletogglesprint.tweaker.MixinPlugin",
+  "refmap": "mixins.simpletogglesprint.refmap.json",
   "mixins": [
-    "accessors.AccessorEntity",
-    "accessors.AccessorEntityPlayer",
-    "accessors.AccessorGameSettings",
-    "accessors.AccessorKeybinding",
-    "accessors.AccessorPlayerCapabilities",
-    "accessors.AccessorRenderGameOverlayEvent",
     "MixinEntityPlayerSP",
     "MixinMovementInputFromOptions",
     "playerapi.MixinClientPlayerAPI"
