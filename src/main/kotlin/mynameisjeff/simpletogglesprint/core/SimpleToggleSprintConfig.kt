@@ -16,7 +16,15 @@ import mynameisjeff.simpletogglesprint.core.SimpleToggleSprintConfig.ToggleSprin
 import net.minecraft.entity.player.EntityPlayer
 import java.io.File
 
-object SimpleToggleSprintConfig : Config(Mod("SimpleToggleSprint", ModType.PVP, VigilanceMigrator(File("./config/simpletogglesprint.toml").absolutePath)), "simpletogglesprint.json") {
+object SimpleToggleSprintConfig : Config(
+    Mod(
+        "SimpleToggleSprint",
+        ModType.PVP,
+        "/simpletogglesprint_dark.svg",
+        VigilanceMigrator(File("./config/simpletogglesprint.toml").absolutePath),
+        ),
+    "simpletogglesprint.json"
+) {
 
     @Switch(
         name = "Toggle Sprint"
