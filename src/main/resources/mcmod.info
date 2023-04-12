@@ -1,13 +1,13 @@
 [
   {
-    "modid": "simpletogglesprint",
-    "name": "SimpleToggleSprint",
-    "description": "Basic Toggle Sprint and Sneak for Minecraft",
+    "modid": "polysprint",
+    "name": "PolySprint",
+    "description": "Toggle sprint and sneak with a keybind.",
     "version": "${version}",
     "mcversion": "${mcVersionStr}",
-    "url": "https://github.com/Polyfrost/SimpleToggleSprint",
+    "url": "https://github.com/Polyfrost/PolySprint",
     "updateUrl": "",
-    "authorList": ["My-Name-Is-Jeff", "Polyfrost"],
+    "authorList": ["Polyfrost", "My-Name-Is-Jeff"],
     "credits": "",
     "logoFile": "",
     "screenshots": [],

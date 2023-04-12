@@ -1,4 +1,22 @@
-package mynameisjeff.simpletogglesprint.core
+/*
+ * PolySprint - Toggle sprint and sneak with a keybind.
+ *  Copyright (C) 2023  Polyfrost
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package cc.polyfrost.polysprint.core
 
 import cc.polyfrost.oneconfig.config.Config
 import cc.polyfrost.oneconfig.config.annotations.HUD
@@ -11,19 +29,19 @@ import cc.polyfrost.oneconfig.config.data.ModType
 import cc.polyfrost.oneconfig.config.migration.VigilanceMigrator
 import cc.polyfrost.oneconfig.hud.TextHud
 import cc.polyfrost.oneconfig.libs.universal.UKeyboard
-import mynameisjeff.simpletogglesprint.SimpleToggleSprint
-import mynameisjeff.simpletogglesprint.core.SimpleToggleSprintConfig.ToggleSprintHud.DisplayState.Companion.activeDisplay
+import cc.polyfrost.polysprint.PolySprint
+import cc.polyfrost.polysprint.core.PolySprintConfig.ToggleSprintHud.DisplayState.Companion.activeDisplay
 import net.minecraft.entity.player.EntityPlayer
 import java.io.File
 
-object SimpleToggleSprintConfig : Config(
+object PolySprintConfig : Config(
     Mod(
-        "SimpleToggleSprint",
+        "PolySprint",
         ModType.PVP,
-        "/simpletogglesprint_dark.svg",
+        "/polysprint_dark.svg",
         VigilanceMigrator(File("./config/simpletogglesprint.toml").absolutePath),
         ),
-    "simpletogglesprint.json"
+    "polysprint.json"
 ) {
 
     @Switch(
@@ -87,20 +105,20 @@ object SimpleToggleSprintConfig : Config(
         addDependency("keybindToggleSneakKey", "keybindToggleSneak")
         registerKeyBind(keybindToggleSprintKey) {
             if (keybindToggleSprint) {
-                if (enabled && toggleSprint && !SimpleToggleSprint.sprintHeld) {
+                if (enabled && toggleSprint && !PolySprint.sprintHeld) {
                     toggleSprintState = !toggleSprintState
-                    SimpleToggleSprintConfig.save()
+                    PolySprintConfig.save()
                 }
-                SimpleToggleSprint.sprintHeld = !SimpleToggleSprint.sprintHeld
+                PolySprint.sprintHeld = !PolySprint.sprintHeld
             }
         }
         registerKeyBind(keybindToggleSneakKey) {
             if (keybindToggleSneak) {
-                if (enabled && toggleSneak && !SimpleToggleSprint.sneakHeld) {
+                if (enabled && toggleSneak && !PolySprint.sneakHeld) {
                     toggleSneakState = !toggleSneakState
-                    SimpleToggleSprintConfig.save()
+                    PolySprintConfig.save()
                 }
-                SimpleToggleSprint.sneakHeld = !SimpleToggleSprint.sneakHeld
+                PolySprint.sneakHeld = !PolySprint.sneakHeld
             }
         }
     }
@@ -193,25 +211,25 @@ object SimpleToggleSprintConfig : Config(
         private fun getCompleteText(text: String?) = if (brackets && text?.isNotEmpty() == true) "[$text]" else text
 
         private enum class DisplayState(val displayText: ToggleSprintHud.() -> String, val displayCheck: (EntityPlayer) -> Boolean) {
-            DESCENDINGHELD({ descendingHeld }, { it.capabilities.isFlying && it.isSneaking && SimpleToggleSprint.sneakHeld }),
-            DESCENDINGTOGGLED({ descendingToggled }, { it.capabilities.isFlying && SimpleToggleSprintConfig.enabled && toggleSprint && toggleSneakState }),
+            DESCENDINGHELD({ descendingHeld }, { it.capabilities.isFlying && it.isSneaking && PolySprint.sneakHeld }),
+            DESCENDINGTOGGLED({ descendingToggled }, { it.capabilities.isFlying && PolySprintConfig.enabled && toggleSprint && toggleSneakState }),
             DESCENDING({ descending }, { it.capabilities.isFlying && it.isSneaking }),
             FLYING({ flying }, { it.capabilities.isFlying }),
             RIDING({ riding }, { it.isRiding }),
-            SNEAKHELD({ sneakHeld }, { it.isSneaking && SimpleToggleSprint.sneakHeld }),
-            TOGGLESNEAK({ sneakToggle }, { SimpleToggleSprintConfig.enabled && toggleSneak && toggleSneakState }),
+            SNEAKHELD({ sneakHeld }, { it.isSneaking && PolySprint.sneakHeld }),
+            TOGGLESNEAK({ sneakToggle }, { PolySprintConfig.enabled && toggleSneak && toggleSneakState }),
             SNEAKING({ sneak }, { it.isSneaking }),
-            SPRINTHELD({ sprintHeld }, { it.isSprinting && SimpleToggleSprint.sprintHeld }),
-            TOGGLESPRINT({ sprintToggle }, { SimpleToggleSprintConfig.enabled && toggleSprint && toggleSprintState }),
+            SPRINTHELD({ sprintHeld }, { it.isSprinting && PolySprint.sprintHeld }),
+            TOGGLESPRINT({ sprintToggle }, { PolySprintConfig.enabled && toggleSprint && toggleSprintState }),
             SPRINTING({ sprint }, { it.isSprinting });
 
             val isActive: Boolean
-                get() = displayCheck(SimpleToggleSprint.player!!)
+                get() = displayCheck(PolySprint.player!!)
 
             companion object {
                 val ToggleSprintHud.activeDisplay: String?
                     get() {
-                        if (SimpleToggleSprint.player == null) return null
+                        if (PolySprint.player == null) return null
                         return values().find { it.isActive }?.displayText?.invoke(this)
                     }
             }

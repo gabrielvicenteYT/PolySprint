@@ -16,29 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        maven("https://repo.polyfrost.cc/releases")
-    }
-    plugins {
-        val egtVersion = "0.1.28"
-        id("cc.polyfrost.multi-version.root") version egtVersion
-    }
-}
+package cc.polyfrost.polysprint.mixins;
 
-val mod_name: String by settings
+import cc.polyfrost.polysprint.core.UtilsKt;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.MovementInput;
+import net.minecraft.util.MovementInputFromOptions;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
-rootProject.name = mod_name
-rootProject.buildFileName = "root.gradle.kts"
-
-listOf(
-    "1.8.9-forge",
-    "1.12.2-forge"
-).forEach { version ->
-    include(":$version")
-    project(":$version").apply {
-        projectDir = file("versions/$version")
-        buildFileName = "../../build.gradle.kts"
+@Mixin(MovementInputFromOptions.class)
+public abstract class MixinMovementInputFromOptions extends MovementInput {
+    @Redirect(method = "updatePlayerMoveState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isKeyDown()Z"))
+    private boolean setSneakState(KeyBinding keyBinding) {
+        return UtilsKt.shouldSetSneak(keyBinding);
     }
 }

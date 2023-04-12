@@ -15,30 +15,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package cc.polyfrost.polysprint.commands
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        maven("https://repo.polyfrost.cc/releases")
-    }
-    plugins {
-        val egtVersion = "0.1.28"
-        id("cc.polyfrost.multi-version.root") version egtVersion
-    }
-}
+import cc.polyfrost.oneconfig.utils.commands.annotations.Command
+import cc.polyfrost.oneconfig.utils.commands.annotations.Main
+import cc.polyfrost.polysprint.core.PolySprintConfig
 
-val mod_name: String by settings
+@Command("polysprint", aliases = ["sts", "togglesprint", "togglesneak", "simpletogglesprint"])
+class PolySprintCommand {
 
-rootProject.name = mod_name
-rootProject.buildFileName = "root.gradle.kts"
-
-listOf(
-    "1.8.9-forge",
-    "1.12.2-forge"
-).forEach { version ->
-    include(":$version")
-    project(":$version").apply {
-        projectDir = file("versions/$version")
-        buildFileName = "../../build.gradle.kts"
+    @Main
+    fun execCommand() {
+        PolySprintConfig.openGui()
     }
 }

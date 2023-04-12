@@ -1,8 +1,8 @@
 {
   "compatibilityLevel": "JAVA_8",
-  "package": "mynameisjeff.simpletogglesprint.mixins",
-  "plugin": "mynameisjeff.simpletogglesprint.tweaker.MixinPlugin",
-  "refmap": "mixins.simpletogglesprint.refmap.json",
+  "package": "cc.polyfrost.polysprint.mixins",
+  "plugin": "cc.polyfrost.polysprint.tweaker.MixinPlugin",
+  "refmap": "mixins.polysprint.refmap.json",
   "mixins": [
     "MixinEntityPlayerSP",
     "MixinMovementInputFromOptions",
